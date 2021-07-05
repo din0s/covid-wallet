@@ -7,18 +7,28 @@
     "start": "react-native start"
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.12.1",
+    "base-64": "^1.0.0",
     "expo": "~42.0.0",
+    "expo-barcode-scanner": "^10.2.2",
+    "expo-document-picker": "^9.2.4",
     "expo-splash-screen": "~0.11.2",
-    "expo-status-bar": "~1.0.4",
+    "expo-status-bar": "^1.0.4",
     "expo-updates": "~0.8.0",
+    "jsqr": "^1.4.0",
+    "pdfjs-dist": "^2.8.335",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "~0.63.4",
     "react-native-gesture-handler": "~1.10.2",
+    "react-native-qrcode-svg": "^6.1.1",
     "react-native-reanimated": "~2.2.0",
     "react-native-screens": "~3.4.0",
+    "react-native-storage": "^1.0.1",
+    "react-native-svg": "^12.1.1",
     "react-native-unimodules": "~0.14.3",
-    "react-native-web": "~0.13.12"
+    "react-native-web": "~0.13.12",
+    "react-pdf": "^5.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"

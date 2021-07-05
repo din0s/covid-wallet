@@ -51,5 +51,7 @@
 	<false/>
   <key>UIStatusBarStyle</key>
   <string>UIStatusBarStyleDefault</string>
-</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Use your camera to scan the QR code on your green pass</string>
+	</dict>
 </plist>
