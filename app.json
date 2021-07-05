@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "covid-wallet",
+    "slug": "covid-wallet",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "covid-wallet"
+}
