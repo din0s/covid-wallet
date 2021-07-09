@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 
+import AnimatedSplash from "react-native-animated-splash-screen";
 import AsyncStorage from "@react-native-community/async-storage";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { FileSystem } from "react-native-unimodules";
@@ -35,6 +36,8 @@ const storage = new Storage({
 const Separator = () => <View style={styles.separator} />;
 
 const App = () => {
+  const [appLoaded, setAppLoaded] = useState(false);
+
   const [hasCamPerm, setHasCamPerm] = useState(false);
   const [openQrScanner, setOpenQrScanner] = useState(false);
 
@@ -56,6 +59,8 @@ const App = () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasCamPerm(status === "granted");
     }
+
+    setAppLoaded(true);
   };
 
   const scanQr = ({ data }) => {
@@ -145,59 +150,71 @@ const App = () => {
     AsyncStorage.clear();
   };
 
-  if (qrContent !== "" && qrDim) {
-    const { width, height } = Dimensions.get("window");
+  const getView = () => {
+    if (qrContent !== "" && qrDim) {
+      const { width, height } = Dimensions.get("window");
+      return (
+        <View style={styles.container}>
+          <Text style={styles.title} children={"My COVID-19 Green Pass"} />
+          <Separator />
+          <QRCode
+            value={qrContent}
+            size={Math.min(qrDim, width - 8, height - 16)}
+            quietZone={8}
+          />
+          <Separator />
+          <Button onPress={resetAll} title="Reset" color="#ed4245" />
+          <StatusBar style="auto" />
+        </View>
+      );
+    }
+
+    if (openQrScanner) {
+      return (
+        <View style={styles.qr}>
+          <BarCodeScanner
+            onBarCodeScanned={scanQr}
+            style={StyleSheet.absoluteFillObject}
+          />
+          <Button
+            onPress={() => setOpenQrScanner(false)}
+            title="Cancel"
+            color="#ed4245"
+          />
+          <StatusBar style="auto" />
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container}>
-        <Text style={styles.title} children={"My COVID-19 Green Pass"} />
-        <Separator />
-        <QRCode
-          value={qrContent}
-          size={Math.min(qrDim, width - 8, height - 16)}
-          quietZone={8}
+        <Text
+          styles={styles.title}
+          children={"How would you like to import your green pass?"}
         />
         <Separator />
-        <Button onPress={resetAll} title="Reset" color="#ed4245" />
+        {hasCamPerm && (
+          <Button
+            onPress={() => setOpenQrScanner(true)}
+            title="Scan QR code"
+            color="#57f287"
+          />
+        )}
+        <Separator />
+        <Button onPress={importPdf} title="Read from PDF" color="#5865f2" />
         <StatusBar style="auto" />
       </View>
     );
-  }
-
-  if (openQrScanner) {
-    return (
-      <View style={styles.qr}>
-        <BarCodeScanner
-          onBarCodeScanned={scanQr}
-          style={StyleSheet.absoluteFillObject}
-        />
-        <Button
-          onPress={() => setOpenQrScanner(false)}
-          title="Cancel"
-          color="#ed4245"
-        />
-        <StatusBar style="auto" />
-      </View>
-    );
-  }
+  };
 
   return (
-    <View style={styles.container}>
-      <Text
-        styles={styles.title}
-        children={"How would you like to import your green pass?"}
-      />
-      <Separator />
-      {hasCamPerm && (
-        <Button
-          onPress={() => setOpenQrScanner(true)}
-          title="Scan QR code"
-          color="#57f287"
-        />
-      )}
-      <Separator />
-      <Button onPress={importPdf} title="Read from PDF" color="#5865f2" />
-      <StatusBar style="auto" />
-    </View>
+    <AnimatedSplash
+      translucent={true}
+      isLoaded={appLoaded}
+      logoImage={require("./assets/virus.png")}
+    >
+      {getView()}
+    </AnimatedSplash>
   );
 };
 
